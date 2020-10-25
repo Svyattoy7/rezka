@@ -1,0 +1,60 @@
+button {
+  	outline: none;
+}
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+ul.quiality {
+  margin: 0;
+  padding-left: 18px;
+}
+a {
+  font-size: 16px;
+  color: #086ca9;
+  white-space: nowrap;
+}
+.seria {
+  display: inline-block;
+}
+body {
+  padding: 13px 0;
+  min-width: 450px;
+}
+.card-header {
+  padding: 0px;
+}
+#history {
+  position: relative;
+}
+#history ul {
+  
+  margin: 0;
+  max-height: 400px;
+  overflow: auto;
+}
+#history li {
+  white-space: nowrap;
+}
+#history li a {
+  font-size: 14px;
+}
+#history ul small{
+  font-size: 50%;
+}
+.clear_history {
+  font-size: 8px;
+  position: absolute;
+  right: 1.25rem;
+  top: 6px;
+  cursor: pointer;
+}
+.btn-link.focus, .btn-link:focus {
+  text-decoration: none;
+}
+.btn-link:hover {
+    text-decoration: none;
+}
+.film_a {
+  cursor: pointer;
+} 
