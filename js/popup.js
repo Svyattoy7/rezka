@@ -55,7 +55,7 @@ function getRezkaInfo(type) {
 function currentVideoRender() {
 	chrome.storage.local.get('currentCDN', function (data) {
         let div = document.getElementById('contentForVideo');
-        if (!data) {
+        if (!data || !data.currentCDN) {
             div.innerHTML = '<center>Нет данных</center>';
             return;
         }
@@ -150,7 +150,7 @@ function getStorage(keys) {
     return p;
 }
 
-
+/*
 btnGetLinksSeason.onclick = function (element) {
     getRezkaInfo('GET_ALL_VIDEOS');
     chrome.storage.local.get(['serialCDN', 'lastFilm'], function (data) {
@@ -169,6 +169,7 @@ btnGetLinksSeason.onclick = function (element) {
 
 };
 
+
 btnShowLinksSeason.onclick = function (element) {
     chrome.storage.local.get(['serialCDN', 'lastFilm'], function (data) {
         let html = '<h5>last: ' + data.lastFilm + '</h5>';
@@ -184,8 +185,5 @@ btnShowLinksSeason.onclick = function (element) {
         $('.film_a').on('click', saveOpenedFilm);
     });
 };
-/*
-chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-chrome.tabs.executeScript(
-tabs[0].id,{code: 'document.body.style.backgroundColor = "yellow"; console.log("hi");'});
-});*/
+
+*/
