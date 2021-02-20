@@ -24,25 +24,26 @@ body {
 .card-header {
   padding: 0px;
 }
-#history {
+.list-block {
   position: relative;
 }
-#history ul {
+.list-block ul {
   
   margin: 0;
   max-height: 400px;
   overflow: auto;
 }
-#history li {
+.list-block li {
   white-space: nowrap;
+  position: relative;
 }
-#history li a {
+.list-block li a {
   font-size: 14px;
 }
-#history ul small{
+.list-block ul small{
   font-size: 50%;
 }
-.clear_history {
+.clear-history {
   font-size: 8px;
   position: absolute;
   right: 1.25rem;
@@ -58,3 +59,28 @@ body {
 .film_a {
   cursor: pointer;
 } 
+
+#saveLink {
+  margin: 0px 0 13px 0px;
+  padding: 4px 7px;
+  display: block;
+}
+
+.deleteSavedLink {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 5px;
+  position: absolute;
+  color: red;
+  font-size: 16px!important;
+}
+
+.deleteSavedLink:hover {
+  text-decoration: none;
+  color: #ff7600;
+}
+
+.page-url {
+  font-size: 16px!important;
+  color: blue;
+}

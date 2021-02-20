@@ -40,11 +40,21 @@ bgPort.onMessage.addListener(function (msg) {
     }
 });
 
-historyRender();
 
-$('#history').on('click', function () {
-	historyRender();
+let historyRendered = false,
+    savedLinksRendered = false;
+
+$('#headingTwo').on('click', function () {
+	!historyRendered && historyRender();
+    historyRendered = true;
 });
+
+$('#headingSaves').on('click', function () {
+    !savedLinksRendered && savedLinksRender();
+    savedLinksRendered = true;
+});
+
+$('#accordionExt').on('click', '.film_a', saveOpenedFilm);
 
 function getRezkaInfo(type) {
     sendPort.postMessage({
@@ -59,11 +69,58 @@ function currentVideoRender() {
             div.innerHTML = '<center>Нет данных</center>';
             return;
         }
-        let html = '<h5>' + data.currentCDN.payload.filmName + '</h5><ul class="quiality">';
+        let html = '<h5>' + data.currentCDN.payload.filmName + '</h5>';
+        let qualityHtml = qualityRender(data.currentCDN.payload.CDNPlayerInfo.streams, data.currentCDN.payload.filmName, data.currentCDN.payload.urlPage);
+        html += `<button class="btn btn-success" id="saveLink" data-name="${data.currentCDN.payload.filmName}" data-url="${data.currentCDN.payload.urlPage}">Сохранить ссылку</button>`;
         html += qualityRender(data.currentCDN.payload.CDNPlayerInfo.streams, data.currentCDN.payload.filmName, data.currentCDN.payload.urlPage);
         div.innerHTML = html;
-        $('.film_a').on('click', saveOpenedFilm);
+        $('#saveLink').data('quality', qualityHtml);    
+
+        
+        $('#saveLink').on('click', saveLink);
     });
+}
+
+function savedLinksRender() {
+    
+    let html = '';
+    chrome.storage.local.get(['savedLinks'], function (data) {
+        let savedLinks = [];
+        savedLinks = data.savedLinks;
+
+    
+        if (!savedLinks || savedLinks.length == 0) {
+            html += '<center>пока пусто</center>'
+        } else {
+            html = '<ul><a class="clear-history" id="clearSavedLinks">Очистить</a>';
+            
+            for (i in savedLinks) {
+                html += '<li><a href="'+savedLinks[i]['url']+'" target="_blank" class="page-url">'+savedLinks[i]['name']+'</a><br>'+savedLinks[i]['quality']+'<small>'+savedLinks[i]['date']+'</small><a data-id="'+i+'" class="deleteSavedLink">x</a></li>';//'<a href="'+savedLinks[i]['url']+'" target="_blank">'+savedLinks[i]['name']+'</a> <small>'+savedLinks[i]['date']+'</small><a data-id="'+i+'" class="deleteSavedLink">x</a></li>';
+            }
+            html += '</ul>';
+        }
+        $('#savedLinks').html(html);
+        $('#clearSavedLinks').on('click', function () {
+            chrome.storage.local.set({
+                savedLinks: []
+            });
+            savedLinksRender();
+        });
+        $('.deleteSavedLink').on('click', function () {
+            let id = parseInt($(this).data('id'));
+            if (typeof id == "number") {
+                savedLinks.splice(id, 1);
+                chrome.storage.local.set({
+                    savedLinks: savedLinks
+                });
+            }
+            savedLinksRender();
+        });
+        
+    });
+    
+    
+    
 }
 
 function historyRender() {
@@ -77,7 +134,7 @@ function historyRender() {
 		if (!history || history.length == 0) {
 			html += '<center>пока пусто</center>'
 		} else {
-			html = '<ul><a class="clear_history">Очистить</a>';
+			html = '<ul><a class="clear-history" id="clearHistory">Очистить</a>';
 			history = history.reverse();
 			for (i in history) {
 				html += '<li>'+'<a href="'+history[i]['url']+'" target="_blank">'+history[i]['name']+'</a> <small>'+history[i]['date']+'</small></li>';
@@ -85,10 +142,11 @@ function historyRender() {
 			html += '</ul>';
 		}
 		document.getElementById('history').innerHTML = html;
-		$('.clear_history').on('click', function () {
+		$('#clearHistory').on('click', function () {
 			chrome.storage.local.set({
 	            history: []
 	        });
+            historyRender();
 		});
 	});
 	
@@ -98,9 +156,11 @@ function historyRender() {
 
 
 function qualityRender(urls, name = '', urlPage) {
-    let html = '<ul>';
+    let html = '';
     let lines = urls.split('[');
     let player_url = chrome.extension.getURL('player.html') + '?title=' + encodeURIComponent(name) + '&streams=' + encodeURIComponent(urls);
+    
+    html += '<ul class="quiality">';
     //html += `<li><a class="film_a" data-urlpage="${urlPage}" data-url="${player_url}" data-name="${name}">Player</a></li>`;
     for (i of lines) {
         let label = i.match(/(^\d+p[^\]]*)/);
@@ -110,9 +170,11 @@ function qualityRender(urls, name = '', urlPage) {
             }
             let link = player_url+'&quality='+encodeURIComponent(label[0]);
             html += `<li><a class="film_a" data-urlpage="${urlPage}" data-url="${link}" data-name="${name}">${label[0]}</a></li>`;
+          
             //html += '<li><a class="film_a" data-urlpage="'+urlPage+'" data-url="'+url[1]+'" data-name="' + name + '">' + label[0] + '</a></li>'
     }
     html += '</ul>';
+    
     return html;
 }
 
@@ -137,8 +199,36 @@ async function saveOpenedFilm(e) {
     	
     	
     }
+    historyRendered = false;
     window.open(url, '_blank');
 }
+
+
+async function saveLink(e) {
+    let name = $(this).data('name'); 
+    let url = $(this).data('url'); 
+    let quality = $(this).data('quality'); 
+
+    if (name) {
+  
+        let data = await getStorage(['savedLinks'])
+        let savedLinks = data.savedLinks;
+        let now = new Date();
+        savedLinks = savedLinks ?? []; 
+        savedLinks.push({name: name, date: now.toLocaleString(), quality: quality, url: url});
+        let p = new Promise(function(resolve, reject){
+            chrome.storage.local.set({savedLinks: savedLinks}, function(){
+                resolve(true);
+            })
+        });
+        let s = await p;
+            
+    }
+    savedLinksRendered = false;
+    $('#saveLink').attr('disabled', true);
+    $('#saveLink').html('Сохранено');
+}
+
 
 function getStorage(keys) {
     var p = new Promise(function(resolve, reject){

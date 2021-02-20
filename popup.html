@@ -11,37 +11,55 @@
 </head>
 <body>
   <div class="container-fluid">
-  <div class="accordion" id="accordionExt">
-  <div class="card">
-    <div class="card-header" id="headingOne">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Текущее видео
-        </button>
-      </h2>
+    <div class="accordion" id="accordionExt">
+  
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Текущее видео
+            </button>
+          </h2>
+        </div>
+
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExt">
+          <div class="card-body" id="contentForVideo">
+      
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" id="headingSaves">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseSaves" aria-expanded="true" aria-controls="collapseSaves">
+              Сохраненные ссылки
+            </button>
+          </h2>
+        </div>
+        <div id="collapseSaves" class="collapse" aria-labelledby="headingSaves" data-parent="#accordionExt">
+          <div class="card-body list-block" id="savedLinks">
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              История
+            </button>
+          </h2>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExt">
+          <div class="card-body list-block" id="history">
+            
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExt">
-      <div class="card-body" id="contentForVideo">
-        
-      </div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header" id="headingTwo">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          История
-        </button>
-      </h2>
-    </div>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExt">
-      <div class="card-body" id="history">
-        
-      </div>
-    </div>
-  </div>
-</div>
 </div>
 
   
